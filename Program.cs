@@ -52,58 +52,22 @@ static class Program {
         using var cts = new CancellationTokenSource();
         Console.CancelKeyPress += (s, e) => { e.Cancel = true; cts.Cancel(); };
 
-        var hotkeyCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token);
-        bool rescheduleRequested = false;
 
-        var hotkeyTask = Task.Run(async () => {
-            Console.WriteLine("Press 'n' to choose a new random delay.");
-            try {
-                while (!hotkeyCts.Token.IsCancellationRequested) {
-                    if (Console.KeyAvailable) {
-                        var key = Console.ReadKey(true);
-                        if (key.Key == ConsoleKey.N) {
-                            rescheduleRequested = true;
-                        }
-                        else {
-                            await Task.Delay(50, hotkeyCts.Token);
-                        }
-                    }
-                }
-            }
-            catch (OperationCanceledException) { }
-        }, hotkeyCts.Token);
 
         var nextAt = DateTimeOffset.UtcNow + TimeSpan.FromSeconds(picker.NextDelay(minDelaySeconds, maxDelaySeconds));
         while (!cts.IsCancellationRequested) {
 
-            if (rescheduleRequested) {
-                Console.WriteLine("Rescheduling...");
-                rescheduleRequested = false;
-                nextAt = DateTimeOffset.UtcNow + TimeSpan.FromSeconds(picker.NextDelay(minDelaySeconds, maxDelaySeconds));
-                var ts = nextAt - DateTimeOffset.UtcNow;
-                Console.WriteLine(
-                    $"Rescheduled: {ts.Hours:0} {(ts.Hours == 1 ? "hour" : "hours")} " +
-                    $"{ts.Minutes:0} {(ts.Minutes == 1 ? "minute" : "minutes")} and " +
-                    $"{ts.Seconds:0} {(ts.Seconds == 1 ? "second" : "seconds")}");
-            }
+            nextAt = DateTimeOffset.UtcNow + TimeSpan.FromSeconds(picker.NextDelay(minDelaySeconds, maxDelaySeconds));
+            var ts = nextAt - DateTimeOffset.UtcNow;
+
 
             var wait = nextAt - DateTimeOffset.UtcNow;
             if (wait > TimeSpan.Zero) {
-                Console.WriteLine($"Waiting {wait.Hours}{(wait.Hours == 1 ? " hour " : " hours ")}"
+                Console.WriteLine($"{DateTime.Now}: Waiting {wait.Hours}{(wait.Hours == 1 ? " hour " : " hours ")}"
                     + $"{wait.Minutes}{(wait.Minutes == 1 ? " minute " : " minutes ")} and "
                     + $"{wait.Seconds}{(wait.Seconds == 1 ? " second " : " seconds")}");
 
-                var chunk = TimeSpan.FromMilliseconds(250);
-                try {
-                    // loop in small chunks so we can notice 'n' promptly
-                    while ((nextAt - DateTimeOffset.UtcNow) > TimeSpan.Zero && !rescheduleRequested)
-                        await Task.Delay(chunk, cts.Token);
-                }
-                catch (TaskCanceledException) { break; }
-
-                continue;
-
-                try {
+               try {
                     await Task.Delay(wait, cts.Token);
                 }
                 catch (TaskCanceledException) {
