@@ -1,7 +1,7 @@
 Pishock Sharp
 
 
-YOU MUST CREATE AN APPSETTINGS.JSON file in your project with the following format:
+YOU MUST CREATE AN APPSETTINGS.JSON file in the same directory as the executable with the following format:
 
 
 {
