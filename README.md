@@ -22,28 +22,22 @@ All runtime behavior is driven by the PiShock section. Username and ApiKey are r
 
 {
   "PiShock": {
-    "Username": "your-username",
-    "ApiKey": "your-v2-api-key",
-    "ClientId": "18215",
-    "Channel": "",
-    "DeviceId": 25539,
+    "Username": "<Your UserName",
+    "ApiKey": "<Your API Key>",
+    "ClientId": Client ID,  //NO QUOTES!
+    "DeviceId": Device ID,  //NO QUOTES!
+    "UseShareCode": false,  //NO QUOTES!
+    "UserID": UserID,       //NO QUOTES!
+    "Origin": "<How you want this to appear in the logs>",
     "Type": "api",
-    "ShareCode": "",
-    "UserId": 38033,
-    "Origin": "WSSTestApp",
-
-
-    "AllowShocks": true,
-    "MaxShockIntensity": 100,
-    "MaxShockDuration": 2000,
-
-
-    "SendWarnBeforeShock": true,
-    "SendWarnRandomly": false,
-
-
-    "MinDelaySeconds": 60,
-    "MaxDelaySeconds": 1800
+    "Channel": "c{clientID}-ops",
+    "AllowShocks": true,    //NO QUOTES!
+    "MaxShockIntensity": 5, //NO QUOTES!
+    "MaxShockDuration": 1000,  //NO QUOTES!
+    "SendWarnBeforeShock": true, //NO QUOTES!
+    "SendWarnRandomly": true, //NO QUOTES!
+    "MaxDelaySeconds": 21600,  //NO QUOTES!  
+    "MinDelaySeconds": 300    //NO QUOTES!
   }
 }
 
