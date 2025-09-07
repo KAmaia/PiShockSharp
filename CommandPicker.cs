@@ -18,7 +18,7 @@
             if (chooser == 0) {
                 if (allowShocks) {
                     int intensity = Random.Shared.Next(1, maxShockValue + 1);
-                    int duration = Random.Shared.Next(10, maxShockDuration + 1);
+                    int duration = Random.Shared.Next(100, maxShockDuration + 1);
                     command = new ShockCommand(intensity, duration);
                 }
                 else {
