@@ -27,6 +27,12 @@ static class Program {
         var maxDelaySeconds = config.GetValue<int>("PiShock:MaxDelaySeconds");
         var minDelaySeconds = config.GetValue<int>("PiShock:MinDelaySeconds");
 
+        MusicReader newReader = new MusicReader();
+        var notes =  newReader.ReadMusic();
+
+
+
+
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(apiKey)) {
             Console.Error.WriteLine("Missing PiShock:Username or PiShock:ApiKey in appsettings.json.");
             return;
@@ -49,6 +55,18 @@ static class Program {
         Console.CancelKeyPress += (s, e) => { e.Cancel = true; cts.Cancel(); };
 
         var nextAt = DateTimeOffset.UtcNow + TimeSpan.FromSeconds(picker.NextDelay(minDelaySeconds, maxDelaySeconds));
+        
+
+        foreach(var note in notes) {
+            if (note.Key == 0) {
+                await Task.Delay(note.Value);
+            }
+            else {
+                await Publisher.SendCommand(ws, new VibeCommand(config.GetValue<int>("NoteMapping:" + note.Key.ToString()), note.Value, false, false), ctx, cts.Token);
+            }
+        }
+
+
 
         while (!cts.IsCancellationRequested) {
             var wait = nextAt - DateTimeOffset.UtcNow;

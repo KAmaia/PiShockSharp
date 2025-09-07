@@ -4,7 +4,6 @@
         private int maxShockValue;
         private int maxShockDuration;
 
-        // Ensure the constructor is public to fix CS0122
         public CommandPicker(bool allowShocks, int maxShockValue, int maxShockDuration) {
             this.allowShocks = allowShocks;
             this.maxShockValue = maxShockValue;
@@ -12,7 +11,7 @@
         }
 
         public ICommand PickCommand() {
-            ICommand command = null; // Initialize the variable to fix CS0165
+            ICommand command = null; 
             int chooser = Random.Shared.Next(0, 3); // Adjusted range to include all cases
             Console.WriteLine($"Chooser value: {chooser}");
             if (chooser == 0) {
